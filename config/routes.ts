@@ -4,8 +4,8 @@
     layout: false,
     component: './Basic/Login',
   },
-  { path: '/dashboard', name: '仪盘', icon: 'DotChartOutlined', component: './Welcome' },
   { path: '/account', component: './Basic/Account' },
+  { path: '/dashboard', name: '仪盘', icon: 'DotChartOutlined', component: './Basic/Dashboard' },
   {
     name: '文章',
     icon: 'ReconciliationOutlined',

@@ -24,6 +24,7 @@ const Login: React.FC = () => {
   };
 
   const onSubmit = async (values: APILogin.Login) => {
+    localStorage.clear();
     setLoading(true);
     doLogin(values)
       .then(async (response: APIResponse.Response<any>) => {

@@ -30,6 +30,7 @@ const Account: React.FC = () => {
       } else {
         setValidator({ ...validator, avatar: undefined });
         setPicture(response.data.url);
+        setChange(true);
       }
     }
     return e && e.fileList;
@@ -72,7 +73,7 @@ const Account: React.FC = () => {
         password: values.password,
         signature: values.signature,
       };
-      onSave(params);
+      await onSave(params);
     }
   };
 
