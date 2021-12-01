@@ -6,6 +6,7 @@ import { doLogin } from './service';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import Pattern from '@/utils/Pattern';
 import leftImage from '@/static/img/bg-login.png';
+import bgImage from '@/static/img/background-login.jpg';
 import styles from './index.less';
 
 const initBasicFormer: APILogin.Login = {};
@@ -51,27 +52,27 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <Row justify='center'>
+    <div className={styles.container} style={{ background: `url(${bgImage}) no-repeat 50%` }}>
+      <Row justify="center">
         <Col md={18} sm={16} xs={20} className={styles.loginBox}>
           <Row className={styles.loginContent}>
             <Col sm={0} md={0} lg={14} className={styles.leftLogin}>
-              <img src={leftImage} className={styles.leftImage} alt='' width='100%' />
+              <img src={leftImage} className={styles.leftImage} alt="" width="100%" />
             </Col>
             <Col lg={10} md={24} sm={24} className={styles.rightLogin}>
               <Row>
                 <Col xs={24}>
                   <h2 className={styles.title}>登录</h2>
                   {errors ? (
-                    <Alert className={styles.error} type='error' message={errors} showIcon />
+                    <Alert className={styles.error} type="error" message={errors} showIcon />
                   ) : (
-                    <p className={styles.summary}>描述描述</p>
+                    <p className={styles.summary}>余白后台管理系统</p>
                   )}
                 </Col>
                 <Col xs={24}>
                   <Form initialValues={initBasicFormer} onFinish={onSubmit} labelCol={{ span: 0 }}>
                     <Form.Item
-                      name='username'
+                      name="username"
                       validateFirst
                       rules={[
                         {
@@ -84,10 +85,10 @@ const Login: React.FC = () => {
                         },
                       ]}
                     >
-                      <Input prefix={<UserOutlined />} placeholder='Username' />
+                      <Input prefix={<UserOutlined />} placeholder="Username" />
                     </Form.Item>
                     <Form.Item
-                      name='password'
+                      name="password"
                       validateFirst
                       rules={[
                         { required: true, message: '请输入您的登录密码！' },
@@ -97,9 +98,9 @@ const Login: React.FC = () => {
                         },
                       ]}
                     >
-                      <Input.Password prefix={<LockOutlined />} placeholder='Password' />
+                      <Input.Password prefix={<LockOutlined />} placeholder="Password" />
                     </Form.Item>
-                    <Button type='primary' htmlType='submit' block loading={loading}>
+                    <Button type="primary" htmlType="submit" block loading={loading}>
                       立即登录
                     </Button>
                   </Form>
