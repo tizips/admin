@@ -80,7 +80,7 @@ const Editor: React.FC<APISiteArticle.Props> = (props) => {
   const onValidator = () => {
     setValidator({});
     const values: APISiteArticle.Former = former.getFieldsValue();
-    console.info(values);
+
     if (!values.name || !values.category) {
       setType('basic');
     } else if (values.content.isEmpty()) {
