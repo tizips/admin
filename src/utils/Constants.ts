@@ -22,7 +22,7 @@ export default {
       'code',
       'media',
       'hr',
-      'clear',
+      'fullscreen',
     ];
     return controls;
   },

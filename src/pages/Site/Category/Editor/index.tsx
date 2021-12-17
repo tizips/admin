@@ -342,7 +342,7 @@ const Editor: React.FC<APISiteCategory.Props> = (props) => {
                 >
                   <BraftEditor
                     media={{ uploadFn: toUploadByEditor }}
-                    excludeControls={Constants.Exclude()}
+                    controls={Constants.Controls()}
                     className={styles.braft}
                   />
                 </Form.Item>
