@@ -7,11 +7,15 @@ import { InboxOutlined } from '@ant-design/icons';
 import BraftEditor from 'braft-editor';
 // @ts-ignore
 import ColorPicker from 'braft-extensions/dist/color-picker';
+// @ts-ignore
+import Table from 'braft-extensions/dist/table';
 import 'braft-editor/dist/index.css';
 import 'braft-extensions/dist/color-picker.css';
+import 'braft-extensions/dist/table.css';
 import styles from './index.less';
 
 BraftEditor.use(ColorPicker({ theme: 'dark' }));
+BraftEditor.use(Table({ columnResizable: true }));
 
 const Editor: React.FC<APISiteArticle.Props> = (props) => {
   const init: APISiteArticle.Former = {

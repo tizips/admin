@@ -21,6 +21,7 @@ export default {
       'blockquote',
       'code',
       'media',
+      'table',
       'hr',
       'fullscreen',
     ];
