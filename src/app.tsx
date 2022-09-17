@@ -9,8 +9,7 @@ import { doAccount } from '@/services/account';
 import Constants from '@/utils/Constants';
 import { notification } from 'antd';
 import defaultSettings from '../config/defaultSettings';
-
-const loginPath = '/login';
+import Header from './components/Header';
 
 /** 获取用户信息比较慢的时候会展示一个 loading */
 export const initialStateConfig = {
@@ -21,6 +20,8 @@ export const initialStateConfig = {
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
  * */
 export async function getInitialState(): Promise<{
+  module?: number;
+  module_key?: string;
   settings?: Partial<LayoutSettings>;
   account?: API.Account;
   permissions?: string[];
@@ -31,12 +32,12 @@ export async function getInitialState(): Promise<{
       const response = await doAccount();
       if (response.code === Constants.Success) return response.data;
     } catch (error) {
-      history.push(loginPath);
+      history.push(Constants.Login);
     }
     return undefined;
   };
   // 如果是登录页面，不执行
-  if (history.location.pathname !== loginPath) {
+  if (history.location.pathname !== Constants.Login) {
     const account = await toAccount();
     return {
       toAccount,
@@ -53,7 +54,9 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
-    rightContentRender: () => <RightContent />,
+    logo: false,
+    headerContentRender: () => initialState?.account && <Header />,
+    rightContentRender: () => initialState?.account && <RightContent />,
     disableContentMargin: false,
     waterMarkProps: {
       content: initialState?.account?.nickname,
@@ -62,8 +65,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     onPageChange: () => {
       const { location } = history;
       // 如果没有登录，重定向到 login
-      if (!initialState?.account && location.pathname !== loginPath) {
-        history.push(loginPath);
+      if (!initialState?.account && location.pathname !== Constants.Login) {
+        history.push(Constants.Login);
       }
     },
     menuHeaderRender: undefined,
@@ -146,7 +149,8 @@ const authHeaderInterceptor = (url: string, options: RequestOptionsInit) => {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const RefreshResponse = (response: Response, options: RequestOptionsInit) => {
   const token = response.headers.get(Constants.Authorization);
-  if (token && token != localStorage.getItem(Constants.Authorization)) localStorage.setItem(Constants.Authorization, token);
+  if (token && token != localStorage.getItem(Constants.Authorization))
+    localStorage.setItem(Constants.Authorization, token);
   return response;
 };
 

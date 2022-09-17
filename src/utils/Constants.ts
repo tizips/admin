@@ -40,4 +40,5 @@ export default {
     return excludes;
   },
   Upload: '/api/admin/upload',
+  Login: '/login',
 };

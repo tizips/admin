@@ -1,16 +1,12 @@
 import { Button, Space } from 'antd';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useModel } from 'umi';
 import Avatar from './AvatarDropdown';
-import styles from './index.less';
 import { DesktopOutlined } from '@ant-design/icons';
-import { doPermission } from '@/services/account';
-import Constants from '@/utils/Constants';
-
-export type SiderTheme = 'light' | 'dark';
+import styles from './index.less';
 
 const GlobalHeaderRight: React.FC = () => {
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const { initialState } = useModel('@@initialState');
 
   if (!initialState || !initialState.settings) {
     return null;
@@ -22,16 +18,6 @@ const GlobalHeaderRight: React.FC = () => {
   if ((navTheme === 'dark' && layout === 'top') || layout === 'mix') {
     className = `${styles.right}  ${styles.dark}`;
   }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    if (initialState.account) {
-      doPermission().then((response: APIResponse.Response<string[]>) => {
-        if (response.code === Constants.Success)
-          setInitialState({ ...initialState, permissions: response.data });
-      });
-    }
-  }, [initialState.account]);
 
   return (
     <Space className={className}>
