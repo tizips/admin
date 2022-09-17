@@ -4,10 +4,11 @@ import Constants from '@/utils/Constants';
 import { FormOutlined, RedoOutlined } from '@ant-design/icons';
 import { useModel } from '@@/plugin-model/useModel';
 import Editor from '@/pages/Site/Permission/Editor';
-import { doSiteModuleByOnline } from '@/services/site';
+import { doSiteModuleByEnable } from '@/services/site';
 import { doDelete, doTree } from './service';
 import Loop from '@/utils/Loop';
 import Authorize from '@/components/Authorize';
+
 import styles from './index.less';
 
 const methods = {
@@ -18,6 +19,7 @@ const methods = {
 };
 
 const Tree: React.FC = () => {
+
   const { initialState } = useModel('@@initialState');
 
   const [load, setLoad] = useState(false);
@@ -30,7 +32,7 @@ const Tree: React.FC = () => {
 
   const toModules = () => {
     setLoading({ ...loading, module: true });
-    doSiteModuleByOnline()
+    doSiteModuleByEnable()
       .then((response: APIResponse.Response<any[]>) => {
         if (response.code === Constants.Success) {
           setModules(response.data);
@@ -56,7 +58,7 @@ const Tree: React.FC = () => {
   const onDelete = (record: APISitePermissions.Data) => {
     // @ts-ignore
     let temp: APISitePermissions.Data[] = [...data];
-    Loop.byId(temp, record.id, (item: APISitePermissions.Data) => (item.loading_deleted = true));
+    Loop.ById(temp, record.id, (item: APISitePermissions.Data) => (item.loading_deleted = true));
     setData(temp);
 
     doDelete(record.id)
@@ -70,7 +72,7 @@ const Tree: React.FC = () => {
       })
       .finally(() => {
         temp = [...data];
-        Loop.byId(
+        Loop.ById(
           temp,
           record.id,
           (item: APISitePermissions.Data) => (item.loading_deleted = false),
@@ -126,7 +128,7 @@ const Tree: React.FC = () => {
             <Tooltip title="刷新">
               <Button type="primary" icon={<RedoOutlined />} onClick={toPaginate} loading={load} />
             </Tooltip>
-            <Authorize permission="permission.create">
+            <Authorize permission="site.permission.create">
               <Tooltip title="创建">
                 <Button type="primary" icon={<FormOutlined />} onClick={onCreate} />
               </Tooltip>
@@ -166,12 +168,12 @@ const Tree: React.FC = () => {
             width={100}
             render={(record: APISitePermissions.Data) => (
               <>
-                <Authorize permission="permission.update">
+                <Authorize permission="site.permission.update">
                   <Button type="link" onClick={() => onUpdate(record)}>
                     编辑
                   </Button>
                 </Authorize>
-                <Authorize permission="permission.delete">
+                <Authorize permission="site.permission.delete">
                   <Popconfirm
                     title="确定要删除该数据?"
                     placement="leftTop"

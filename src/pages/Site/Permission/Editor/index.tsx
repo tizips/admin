@@ -1,7 +1,8 @@
-import { Cascader, Form, Input, Modal, notification, Select, Tag } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { doApis, doCreate, doParents, doUpdate } from './service';
+import {Cascader, Form, Input, Modal, notification, Select, Tag} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {doCreate, doParents, doUpdate} from './service';
 import Constants from '@/utils/Constants';
+import {doSiteHelperByApis} from "@/services/site";
 
 const Editor: React.FC<APISitePermission.Props> = (props) => {
   const [former] = Form.useForm<APISitePermission.Former>();
@@ -11,35 +12,37 @@ const Editor: React.FC<APISitePermission.Props> = (props) => {
   const [parent, setParent] = useState([]);
 
   const toApis = () => {
-    setLoading({ ...loading, api: true });
-    doApis()
+    setLoading({...loading, api: true});
+    doSiteHelperByApis(props.module)
       .then((response: APIResponse.Response<APISitePermission.Api[]>) => {
         if (response.code === Constants.Success) {
           setApis(response.data);
         }
       })
-      .finally(() => setLoading({ ...loading, api: false }));
+      .finally(() => setLoading({...loading, api: false}));
   };
 
   const toParents = () => {
-    setLoading({ ...loading, parent: true });
+    setLoading({...loading, parent: true});
     doParents(props.module)
       .then((response: APIResponse.Response<APISitePermission.Parent[]>) => {
         if (response.code === Constants.Success) {
           setParents(response.data);
         }
       })
-      .finally(() => setLoading({ ...loading, parent: false }));
+      .finally(() => setLoading({...loading, parent: false}));
   };
 
   const toCreate = (params: any) => {
-    setLoading({ ...loading, confirmed: true });
+
+    setLoading({...loading, confirmed: true});
+
     doCreate(params)
       .then((response: APIResponse.Response<any>) => {
         if (response.code !== Constants.Success) {
-          notification.error({ message: response.message });
+          notification.error({message: response.message});
         } else {
-          notification.success({ message: '添加成功' });
+          notification.success({message: '添加成功'});
 
           setParents([]);
 
@@ -47,17 +50,19 @@ const Editor: React.FC<APISitePermission.Props> = (props) => {
           if (props.onSave) props.onSave();
         }
       })
-      .finally(() => setLoading({ ...loading, confirmed: false }));
+      .finally(() => setLoading({...loading, confirmed: false}));
   };
 
   const toUpdate = (params: any) => {
-    setLoading({ ...loading, confirmed: true });
+
+    setLoading({...loading, confirmed: true});
+
     doUpdate(props.params?.id, params)
       .then((response: APIResponse.Response<any>) => {
         if (response.code !== Constants.Success) {
-          notification.error({ message: response.message });
+          notification.error({message: response.message});
         } else {
-          notification.success({ message: '修改成功' });
+          notification.success({message: '修改成功'});
 
           setParents([]);
 
@@ -65,16 +70,20 @@ const Editor: React.FC<APISitePermission.Props> = (props) => {
           if (props.onSave) props.onSave();
         }
       })
-      .finally(() => setLoading({ ...loading, confirmed: false }));
+      .finally(() => setLoading({...loading, confirmed: false}));
   };
 
   const onSubmit = (values: APISitePermission.Former) => {
+
     const uri: string[] | undefined = values.uri?.split('|');
+
     const params: APISitePermission.Editor = {
+      module: props.module,
       parent: values.parent ? values.parent[values.parent?.length - 1] : undefined,
       name: values.name,
       slug: values.slug,
     };
+
     if (uri?.length == 2) {
       params.method = uri[0];
       params.path = uri[1];
@@ -89,6 +98,7 @@ const Editor: React.FC<APISitePermission.Props> = (props) => {
   };
 
   const toInit = () => {
+
     const data: APISitePermission.Former = {
       parent: [],
       name: undefined,
@@ -97,6 +107,7 @@ const Editor: React.FC<APISitePermission.Props> = (props) => {
     };
 
     if (props.params) {
+
       data.parent = props.params.parents;
       data.name = props.params.name;
       data.slug = props.params.slug;
@@ -125,23 +136,23 @@ const Editor: React.FC<APISitePermission.Props> = (props) => {
       onCancel={props.onCancel}
       confirmLoading={loading.confirmed}
     >
-      <Form form={former} onFinish={onSubmit} labelCol={{ span: 3 }}>
+      <Form form={former} onFinish={onSubmit} labelCol={{span: 3}}>
         <Form.Item label="父级" name="parent">
           <Cascader
             options={parents}
-            fieldNames={{ label: 'name', value: 'id' }}
+            fieldNames={{label: 'name', value: 'id'}}
             onChange={onChangeParent}
             changeOnSelect
             disabled={!!props.params}
           />
         </Form.Item>
-        <Form.Item label="名称" name="name" rules={[{ required: true }, { max: 20 }]}>
-          <Input />
+        <Form.Item label="名称" name="name" rules={[{required: true}, {max: 20}]}>
+          <Input/>
         </Form.Item>
-        <Form.Item label="标示" name="slug" rules={[{ required: true }, { max: 60 }]}>
-          <Input />
+        <Form.Item label="标示" name="slug" rules={[{required: true}, {max: 60}]}>
+          <Input/>
         </Form.Item>
-        <Form.Item label="接口" name="uri" rules={[{ required: parent.length >= 2 }]}>
+        <Form.Item label="接口" name="uri" rules={[{required: parent.length >= 2}]}>
           <Select
             showSearch
             allowClear={parent.length < 2}

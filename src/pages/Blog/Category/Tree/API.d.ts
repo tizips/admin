@@ -3,7 +3,7 @@ declare namespace APISiteCategories {
     id?: number;
     name?: string;
     uri?: string;
-    no?: number;
+    order?: number;
     is_page?: number;
     is_comment?: number;
     is_enable?: number;

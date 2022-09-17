@@ -1,58 +1,60 @@
-import { Form, Input, Modal, notification, Select, Tag } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { doCreate, doRoleByOnline, doUpdate } from './service';
+import {Form, Input, Modal, notification, Select, Tag} from 'antd';
+import React, {useEffect, useState} from 'react';
+import {doCreate, doUpdate} from './service';
 import Constants from '@/utils/Constants';
 import Pattern from '@/utils/Pattern';
-import { useModel } from '@@/plugin-model/useModel';
+import {useModel} from 'umi';
+import {doSiteRoleByEnable} from "@/services/site";
 
 const Editor: React.FC<APISiteAdmin.Props> = (props) => {
-  const { initialState } = useModel('@@initialState');
+
+  const {initialState} = useModel('@@initialState');
 
   const [former] = Form.useForm<APISiteAdmin.Former>();
   const [roles, setRoles] = useState<APISiteAdmin.Role[]>([]);
   const [loading, setLoading] = useState<APISiteAdmin.Loading>({});
 
   const toRoles = () => {
-    setLoading({ ...loading, permission: true });
-    doRoleByOnline()
+    setLoading({...loading, permission: true});
+    doSiteRoleByEnable()
       .then((response: APIResponse.Response<APISiteAdmin.Role[]>) => {
         if (response.code === Constants.Success) {
           setRoles(response.data);
         }
       })
-      .finally(() => setLoading({ ...loading, permission: false }));
+      .finally(() => setLoading({...loading, permission: false}));
   };
 
   const toCreate = (params: any) => {
-    setLoading({ ...loading, confirmed: true });
+    setLoading({...loading, confirmed: true});
     doCreate(params)
       .then((response: APIResponse.Response<any>) => {
         if (response.code !== Constants.Success) {
-          notification.error({ message: response.message });
+          notification.error({message: response.message});
         } else {
-          notification.success({ message: '添加成功' });
+          notification.success({message: '添加成功'});
 
           if (props.onCreate) props.onCreate();
           if (props.onSave) props.onSave();
         }
       })
-      .finally(() => setLoading({ ...loading, confirmed: false }));
+      .finally(() => setLoading({...loading, confirmed: false}));
   };
 
   const toUpdate = (params: any) => {
-    setLoading({ ...loading, confirmed: true });
+    setLoading({...loading, confirmed: true});
     doUpdate(props.params?.id, params)
       .then((response: APIResponse.Response<any>) => {
         if (response.code !== Constants.Success) {
-          notification.error({ message: response.message });
+          notification.error({message: response.message});
         } else {
-          notification.success({ message: '修改成功' });
+          notification.success({message: '修改成功'});
 
           if (props.onUpdate) props.onUpdate();
           if (props.onSave) props.onSave();
         }
       })
-      .finally(() => setLoading({ ...loading, confirmed: false }));
+      .finally(() => setLoading({...loading, confirmed: false}));
   };
 
   const onSubmit = (values: APISiteAdmin.Former) => {
@@ -104,27 +106,27 @@ const Editor: React.FC<APISiteAdmin.Props> = (props) => {
       onCancel={props.onCancel}
       confirmLoading={loading.confirmed}
     >
-      <Form form={former} onFinish={onSubmit} labelCol={{ span: 4 }}>
+      <Form form={former} onFinish={onSubmit} labelCol={{span: 4}}>
         {!props.params && (
           <Form.Item
             label="账号"
             name="username"
-            rules={[{ required: true }, { pattern: RegExp(Pattern.ADMIN_USERNAME) }]}
+            rules={[{required: true}, {pattern: RegExp(Pattern.ADMIN_USERNAME)}]}
           >
-            <Input />
+            <Input/>
           </Form.Item>
         )}
-        <Form.Item label="昵称" name="nickname" rules={[{ required: true }, { max: 20 }]}>
-          <Input />
+        <Form.Item label="昵称" name="nickname" rules={[{required: true}, {max: 20}]}>
+          <Input/>
         </Form.Item>
         <Form.Item
           label="密码"
           name="password"
-          rules={[{ required: !props.params }, { pattern: RegExp(Pattern.ADMIN_PASSWORD) }]}
+          rules={[{required: !props.params}, {pattern: RegExp(Pattern.ADMIN_PASSWORD)}]}
         >
-          <Input.Password placeholder="留空不修改" />
+          <Input.Password placeholder="留空不修改"/>
         </Form.Item>
-        <Form.Item label="角色" name="roles" rules={[{ required: true }]}>
+        <Form.Item label="角色" name="roles" rules={[{required: true}]}>
           <Select mode="multiple" optionLabelProp="label">
             {roles.map((item) => (
               <Select.Option
@@ -137,8 +139,8 @@ const Editor: React.FC<APISiteAdmin.Props> = (props) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item label="签名" name="signature" rules={[{ max: 255 }]}>
-          <Input.TextArea rows={2} maxLength={255} showCount />
+        <Form.Item label="签名" name="signature" rules={[{max: 255}]}>
+          <Input.TextArea rows={2} maxLength={255} showCount/>
         </Form.Item>
       </Form>
     </Modal>

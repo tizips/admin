@@ -11,6 +11,7 @@ declare namespace APISitePermission {
   };
 
   type Editor = {
+    module?: number;
     parent?: number;
     name?: string;
     slug?: string;

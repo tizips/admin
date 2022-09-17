@@ -1,11 +1,10 @@
-import { useModel } from 'umi';
+import {useModel} from 'umi';
 
 const Authorize = (props: APIAuthorize.Props) => {
-  const { initialState } = useModel('@@initialState');
 
-  const permission = `${initialState?.module_key}.${props.permission}`;
+  const {initialState} = useModel('@@initialState');
 
-  return initialState?.permissions && initialState.permissions.indexOf(permission) >= 0
+  return initialState?.permissions && initialState.permissions.indexOf(props.permission) >= 0
     ? props.children || <></>
     : props.fallback || <></>;
 };

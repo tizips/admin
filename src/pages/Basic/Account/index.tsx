@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Form, Input, notification, Spin, Upload } from 'antd';
-import { useModel } from '@@/plugin-model/useModel';
+import React, {useEffect, useState} from 'react';
+import {Button, Card, Form, Input, notification, Spin, Upload} from 'antd';
+import {useModel} from '@@/plugin-model/useModel';
 import Constants from '@/utils/Constants';
-import { LoadingOutlined, UploadOutlined } from '@ant-design/icons';
+import {UploadOutlined} from '@ant-design/icons';
 import Pattern from '@/utils/Pattern';
-import { doUpdate } from './service';
+import {doUpdate} from './service';
+
 import styles from './index.less';
 
 const Account: React.FC = () => {
 
-  const { initialState, setInitialState } = useModel('@@initialState');
+  const {initialState, setInitialState} = useModel('@@initialState');
 
   const [former] = Form.useForm();
   const [validator, setValidator] = useState<APIAccount.Validators>({});
@@ -21,14 +22,14 @@ const Account: React.FC = () => {
 
     if (Array.isArray(e)) return e;
 
-    const { status, response }: { status: string; response: APIResponse.Response<API.Upload> } = e.file;
-    if (status === 'uploading' && !loading.upload) setLoading({ ...loading, upload: true });
+    const {status, response}: { status: string; response: APIResponse.Response<API.Upload> } = e.file;
+    if (status === 'uploading' && !loading.upload) setLoading({...loading, upload: true});
     else if (status == 'done') {
-      setLoading({ ...loading, upload: false });
+      setLoading({...loading, upload: false});
       if (response.code !== Constants.Success) {
-        notification.error({ message: response.message });
+        notification.error({message: response.message});
       } else {
-        setValidator({ ...validator, avatar: undefined });
+        setValidator({...validator, avatar: undefined});
         setPicture(response.data.url);
         setChange(true);
       }
@@ -37,23 +38,23 @@ const Account: React.FC = () => {
   };
 
   const onSave = async (params: APIAccount.Editor) => {
-    setLoading({ ...loading, confirm: true });
+    setLoading({...loading, confirm: true});
     doUpdate(params)
       .then(async (response: APIResponse.Response<any>) => {
         if (response.code != Constants.Success) {
-          notification.error({ message: response.message });
+          notification.error({message: response.message});
         } else {
           setChange(false);
-          notification.success({ message: '修改成功' });
+          notification.success({message: '修改成功'});
 
           const userInfo = await initialState?.toAccount?.();
 
           if (userInfo) {
-            await setInitialState((s) => ({ ...s, account: userInfo }));
+            await setInitialState((s) => ({...s, account: userInfo}));
           }
         }
       })
-      .finally(() => setLoading({ ...loading, confirm: false }));
+      .finally(() => setLoading({...loading, confirm: false}));
   };
 
   const onSubmit = async (values: APIAccount.Former) => {
@@ -94,7 +95,7 @@ const Account: React.FC = () => {
   return (
     <Card title='个人中心'>
       <Form form={former}
-            labelCol={{ sm: 4, md: 3, lg: 2 }} wrapperCol={{ lg: 12 }}
+            labelCol={{sm: 4, md: 3, lg: 2}} wrapperCol={{lg: 12}}
             onValuesChange={() => setChange(true)} onFinish={onSubmit}
       >
         <Form.Item label='头像' required validateStatus={validator.avatar?.status} help={validator.avatar?.message}>
@@ -104,43 +105,43 @@ const Account: React.FC = () => {
               listType='picture-card'
               showUploadList={false}
               action={Constants.Upload}
-              headers={{ Authorization: localStorage.getItem(Constants.Authorization) as string }}
-              data={{ dir: '/avatar' }}
+              headers={{Authorization: localStorage.getItem(Constants.Authorization) as string}}
+              data={{dir: '/avatar'}}
               onChange={onUpload}>
-              <Spin spinning={!!loading.upload} indicator={<LoadingOutlined />}>
+              <Spin spinning={!!loading.upload}>
                 {
                   picture ?
-                    <img src={picture} alt='avatar' className={styles.uploadImage} /> :
+                    <img src={picture} alt='avatar' className={styles.uploadImage}/> :
                     <div className={styles.upload}>
-                      <UploadOutlined className='upload-icon' />
+                      <UploadOutlined className='upload-icon'/>
                     </div>
                 }
               </Spin>
             </Upload>
           </Form.Item>
         </Form.Item>
-        <Form.Item name='nickname' label='昵称' rules={[{ required: true }, { max: 20 }]}>
-          <Input />
+        <Form.Item name='nickname' label='昵称' rules={[{required: true}, {max: 20}]}>
+          <Input/>
         </Form.Item>
         <Form.Item name='mobile' label='手机号'
-                   rules={[{ required: true }, { max: 20 }, { pattern: RegExp(Pattern.MOBILE), message: '手机号输入错误' }]}>
-          <Input />
+                   rules={[{required: true}, {max: 20}, {pattern: RegExp(Pattern.MOBILE), message: '手机号输入错误'}]}>
+          <Input/>
         </Form.Item>
-        <Form.Item name='email' label='邮箱' rules={[{ max: 60 }, { type: 'email' }]}>
-          <Input />
+        <Form.Item name='email' label='邮箱' rules={[{max: 60}, {type: 'email'}]}>
+          <Input/>
         </Form.Item>
         <Form.Item name='password' label='密码'
-                   rules={[{ pattern: RegExp(Pattern.ADMIN_PASSWORD) }]}>
-          <Input.Password />
+                   rules={[{pattern: RegExp(Pattern.ADMIN_PASSWORD)}]}>
+          <Input.Password/>
         </Form.Item>
         <Form.Item name='signature' label='签名'
-                   rules={[{ max: 255 }]}>
-          <Input.TextArea rows={2} maxLength={255} showCount />
+                   rules={[{max: 255}]}>
+          <Input.TextArea rows={2} maxLength={255} showCount/>
         </Form.Item>
         {
           change ?
             <Form.Item
-              wrapperCol={{ sm: { span: 20, offset: 4 }, md: { span: 21, offset: 3 }, lg: { span: 12, offset: 2 } }}>
+              wrapperCol={{sm: {span: 20, offset: 4}, md: {span: 21, offset: 3}, lg: {span: 12, offset: 2}}}>
               <Button type='primary' htmlType='submit' block>修改</Button>
             </Form.Item> : <></>
         }

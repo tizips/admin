@@ -1,4 +1,5 @@
-declare namespace APISiteSystem {
+declare namespace APIBlogSetting {
+
   type Data = {
     type?: string;
     label?: string;
@@ -10,4 +11,5 @@ declare namespace APISiteSystem {
   type Loading = {
     confirm?: boolean;
   };
+
 }

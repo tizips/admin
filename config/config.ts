@@ -1,11 +1,11 @@
 // https://umijs.org/config/
-import { defineConfig } from 'umi';
+import {defineConfig} from 'umi';
 // import {join} from 'path';
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
 
-const { REACT_APP_ENV } = process.env;
+const {REACT_APP_ENV} = process.env;
 export default defineConfig({
   hash: true,
   antd: {},
@@ -39,8 +39,8 @@ export default defineConfig({
   title: false,
   ignoreMomentLocale: true,
   proxy: proxy[REACT_APP_ENV || 'dev'],
-  base: '/admin/',
-  publicPath: '/admin/',
+  base: REACT_APP_ENV != 'dev' ? '/admin/' : '/',
+  publicPath: REACT_APP_ENV != 'dev' ? '/admin/' : '/',
   // Fast Refresh 热更新
   fastRefresh: {},
   openAPI: [

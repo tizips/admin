@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, Input, notification, Select, Tabs } from 'antd';
-import { doList, doUpdate } from '@/pages/Site/System/service';
+import { doList, doUpdate } from '@/pages/Blog/Setting/service';
 import Constants from '@/utils/Constants';
 import { useModel } from '@@/plugin-model/useModel';
 
@@ -8,14 +8,14 @@ const System: React.FC = () => {
   const { initialState } = useModel('@@initialState');
 
   const [former] = Form.useForm();
-  const [systems, setSystems] = useState<APISiteSystem.Data[]>([]);
+  const [systems, setSystems] = useState<APIBlogSetting.Data[]>([]);
   const [active, setActive] = useState<string | undefined>();
-  const [system, setSystem] = useState<APISiteSystem.Data | undefined>({});
+  const [system, setSystem] = useState<APIBlogSetting.Data | undefined>({});
   const [change, setChange] = useState(false);
-  const [loading, setLoading] = useState<APISiteSystem.Loading>({});
+  const [loading, setLoading] = useState<APIBlogSetting.Loading>({});
 
   const toList = () => {
-    doList().then((response: APIResponse.Response<APISiteSystem.Data[]>) => {
+    doList().then((response: APIResponse.Response<APIBlogSetting.Data[]>) => {
       if (response.code === Constants.Success) {
         if (!active) setActive(response.data[0].type);
         setSystems(response.data);

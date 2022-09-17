@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, notification, Popconfirm, Space, Switch, Table, Tag, Tooltip } from 'antd';
+import React, {useEffect, useState} from 'react';
+import {Button, Card, notification, Popconfirm, Space, Switch, Table, Tag, Tooltip} from 'antd';
 import Constants from '@/utils/Constants';
 import moment from 'moment';
-import { FormOutlined, RedoOutlined } from '@ant-design/icons';
-import { useModel } from '@@/plugin-model/useModel';
+import {FormOutlined, RedoOutlined} from '@ant-design/icons';
+import {useModel} from '@@/plugin-model/useModel';
 import Editor from '@/pages/Site/Admin/Editor';
-import { doDelete, doEnable, doPaginate } from './service';
+import {doDelete, doEnable, doPaginate} from './service';
 import Loop from '@/utils/Loop';
 import Authorize from '@/components/Authorize';
 import Enable from '@/components/Enable';
 
 const Paginate: React.FC = () => {
-  const { initialState } = useModel('@@initialState');
+
+  const {initialState} = useModel('@@initialState');
 
   const [load, setLoad] = useState(false);
   const [search, setSearch] = useState<APISiteAdmins.Search>({});
@@ -41,25 +42,21 @@ const Paginate: React.FC = () => {
   const onEnable = (record: APISiteAdmins.Data) => {
     if (data) {
       const temp: APISiteAdmins.Data[] = [...data];
-      Loop.byId(temp, record.id, (item: APISiteAdmins.Data) => (item.loading_enable = true));
+      Loop.ById(temp, record.id, (item: APISiteAdmins.Data) => (item.loading_enable = true));
       setData(temp);
     }
 
-    const enable: APIRequest.Enable = { id: record.id, enable: record.is_enable === 1 ? 0 : 1 };
+    const enable: APIRequest.Enable = {id: record.id, enable: record.is_enable === 1 ? 0 : 1};
 
     doEnable(enable)
       .then((response: APIResponse.Response<any>) => {
         if (response.code !== Constants.Success) {
-          notification.error({ message: response.message });
+          notification.error({message: response.message});
         } else {
-          notification.success({ message: `账号${enable.enable === 1 ? '启用' : '禁用'}成功！` });
+          notification.success({message: `账号${enable.enable === 1 ? '启用' : '禁用'}成功！`});
           if (data) {
             const temp = [...data];
-            Loop.byId(
-              temp,
-              record.id,
-              (item: APISiteAdmins.Data) => (item.is_enable = enable.enable),
-            );
+            Loop.ById(temp, record.id, (item: APISiteAdmins.Data) => (item.is_enable = enable.enable));
             setData(temp);
           }
         }
@@ -67,7 +64,7 @@ const Paginate: React.FC = () => {
       .finally(() => {
         if (data) {
           const temp = [...data];
-          Loop.byId(temp, record.id, (item: APISiteAdmins.Data) => (item.loading_enable = false));
+          Loop.ById(temp, record.id, (item: APISiteAdmins.Data) => (item.loading_enable = false));
           setData(temp);
         }
       });
@@ -76,42 +73,42 @@ const Paginate: React.FC = () => {
   const onDelete = (record: APISiteAdmins.Data) => {
     // @ts-ignore
     let temp: APISiteAdmins.Data[] = [...data];
-    Loop.byId(temp, record.id, (item: APISiteAdmins.Data) => (item.loading_deleted = true));
+    Loop.ById(temp, record.id, (item: APISiteAdmins.Data) => (item.loading_deleted = true));
     setData(temp);
 
     doDelete(record.id)
       .then((response: APIResponse.Response<any>) => {
         if (response.code !== Constants.Success) {
-          notification.error({ message: response.message });
+          notification.error({message: response.message});
         } else {
-          notification.success({ message: '账号删除成功！' });
+          notification.success({message: '账号删除成功！'});
           toPaginate();
         }
       })
       .finally(() => {
         temp = [...data];
-        Loop.byId(temp, record.id, (item: APISiteAdmins.Data) => (item.loading_deleted = false));
+        Loop.ById(temp, record.id, (item: APISiteAdmins.Data) => (item.loading_deleted = false));
         setData(temp);
       });
   };
 
   const onCreate = () => {
     setEditor(undefined);
-    setVisible({ ...visible, editor: true });
+    setVisible({...visible, editor: true});
   };
 
   const onUpdate = (record: APISiteAdmins.Data) => {
     setEditor(record);
-    setVisible({ ...visible, editor: true });
+    setVisible({...visible, editor: true});
   };
 
   const onSuccess = () => {
-    setVisible({ ...visible, editor: false });
+    setVisible({...visible, editor: false});
     toPaginate();
   };
 
   const onCancel = () => {
-    setVisible({ ...visible, editor: false });
+    setVisible({...visible, editor: false});
   };
 
   useEffect(() => {
@@ -125,11 +122,11 @@ const Paginate: React.FC = () => {
         extra={
           <Space size={[10, 10]}>
             <Tooltip title="刷新">
-              <Button type="primary" icon={<RedoOutlined />} onClick={toPaginate} loading={load} />
+              <Button type="primary" icon={<RedoOutlined/>} onClick={toPaginate} loading={load}/>
             </Tooltip>
-            <Authorize permission="admin.create">
+            <Authorize permission="site.admin.create">
               <Tooltip title="创建">
-                <Button type="primary" icon={<FormOutlined />} onClick={onCreate} />
+                <Button type="primary" icon={<FormOutlined/>} onClick={onCreate}/>
               </Tooltip>
             </Authorize>
           </Space>
@@ -143,14 +140,14 @@ const Paginate: React.FC = () => {
             current: paginate.page,
             pageSize: paginate.size,
             total: paginate.total,
-            onChange: (page) => setSearch({ ...search, page }),
+            onChange: (page) => setSearch({...search, page}),
           }}
         >
-          <Table.Column title="昵称" dataIndex="nickname" />
+          <Table.Column title="昵称" dataIndex="nickname"/>
           <Table.Column
             title="账号"
             render={(record: APISiteAdmins.Data) => (
-              <span style={{ color: initialState?.settings?.primaryColor }}>{record.username}</span>
+              <span style={{color: initialState?.settings?.primaryColor}}>{record.username}</span>
             )}
           />
           <Table.Column
@@ -168,8 +165,8 @@ const Paginate: React.FC = () => {
             align="center"
             render={(record: APISiteAdmins.Data) => (
               <Authorize
-                permission="admin.enable"
-                fallback={<Enable is_enable={record.is_enable} />}
+                permission="site.admin.enable"
+                fallback={<Enable is_enable={record.is_enable}/>}
               >
                 <Switch
                   size="small"
@@ -192,12 +189,12 @@ const Paginate: React.FC = () => {
             width={100}
             render={(record: APISiteAdmins.Data) => (
               <>
-                <Authorize permission="admin.update">
+                <Authorize permission="site.admin.update">
                   <Button type="link" onClick={() => onUpdate(record)}>
                     编辑
                   </Button>
                 </Authorize>
-                <Authorize permission="admin.delete">
+                <Authorize permission="site.admin.delete">
                   <Popconfirm
                     title="确定要删除该数据?"
                     placement="leftTop"
@@ -214,7 +211,7 @@ const Paginate: React.FC = () => {
         </Table>
       </Card>
       {visible.editor !== undefined && (
-        <Editor visible={visible.editor} params={editor} onSave={onSuccess} onCancel={onCancel} />
+        <Editor visible={visible.editor} params={editor} onSave={onSuccess} onCancel={onCancel}/>
       )}
     </>
   );

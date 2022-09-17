@@ -9,6 +9,7 @@ import Authorize from '@/components/Authorize';
 import Loop from '@/utils/Loop';
 
 const Paginate: React.FC = () => {
+
   const [search, setSearch] = useState<APISiteRoles.Search>({});
   const [editor, setEditor] = useState<APISiteRoles.Data | undefined>();
   const [load, setLoad] = useState(false);
@@ -35,7 +36,7 @@ const Paginate: React.FC = () => {
   const onDelete = (record: APISiteRoles.Data) => {
     // @ts-ignore
     let temp: APISiteRoles.Data[] = [...data];
-    Loop.byId(temp, record.id, (item: APISiteRoles.Data) => (item.loading_deleted = true));
+    Loop.ById(temp, record.id, (item: APISiteRoles.Data) => (item.loading_deleted = true));
     setData(temp);
 
     doDelete(record.id)
@@ -49,7 +50,7 @@ const Paginate: React.FC = () => {
       })
       .finally(() => {
         temp = [...data];
-        Loop.byId(temp, record.id, (item: APISiteRoles.Data) => (item.loading_deleted = false));
+        Loop.ById(temp, record.id, (item: APISiteRoles.Data) => (item.loading_deleted = false));
         setData(temp);
       });
   };
@@ -86,7 +87,7 @@ const Paginate: React.FC = () => {
             <Tooltip title="刷新">
               <Button type="primary" icon={<RedoOutlined />} onClick={toPaginate} loading={load} />
             </Tooltip>
-            <Authorize permission="role.create">
+            <Authorize permission="site.role.create">
               <Tooltip title="创建">
                 <Button type="primary" icon={<FormOutlined />} onClick={onCreate} />
               </Tooltip>
@@ -119,12 +120,12 @@ const Paginate: React.FC = () => {
             width={100}
             render={(record: APISiteRoles.Data) => (
               <>
-                <Authorize permission="role.update">
+                <Authorize permission="site.role.update">
                   <Button type="link" onClick={() => onUpdate(record)}>
                     编辑
                   </Button>
                 </Authorize>
-                <Authorize permission="role.delete">
+                <Authorize permission="site.role.delete">
                   <Popconfirm
                     title="确定要删除该数据?"
                     placement="leftTop"

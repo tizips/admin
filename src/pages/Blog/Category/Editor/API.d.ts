@@ -1,5 +1,6 @@
-declare namespace APISiteCategory {
-  export type Props = {
+declare namespace APIBlogCategory {
+
+  type Props = {
     visible?: boolean;
     params?: APISiteCategories.Data;
     onCreate?: () => void;
@@ -8,7 +9,7 @@ declare namespace APISiteCategory {
     onCancel?: () => void;
   }
 
-  export type Editor = {
+  type Editor = {
     parent?: number;
     name?: string;
     picture?: string;
@@ -16,57 +17,33 @@ declare namespace APISiteCategory {
     keyword?: string;
     description?: string;
     uri?: string;
-    no?: number;
+    order?: number;
     is_page?: number;
     is_comment?: number;
     is_enable?: number;
     page?: string;
   }
 
-  export type Former = {
+  type Former = {
     parent?: number;
     name?: string;
-    picture?: string[];
+    pictures?: any[];
     title?: string;
     keyword?: string;
     description?: string;
     uri?: string;
-    no?: number;
+    order?: number;
     is_page?: number;
     is_comment?: number;
     is_enable?: number;
     page?: any;
   }
 
-  type Information = {
-    id?: number;
-    parent?: number;
-    name?: string;
-    picture?: string;
-    title?: string;
-    keyword?: string;
-    description?: string;
-    uri?: string;
-    no?: number;
-    is_page?: number;
-    is_comment?: number;
-    is_enable?: number;
-    page?: any;
-  }
-
-  export type Category = {
-    id: number;
-    name?: string;
-  }
-
-  export type Loading = {
+  type Loading = {
     confirmed?: boolean;
     parents?: boolean;
     upload?: boolean;
     information?: boolean;
   }
 
-  type Validators = {
-    picture?: API.Validator;
-  }
 }
